@@ -2,11 +2,20 @@ import asyncio
 
 
 async def fn():
-    print('This is ')
+    print("one")
     await asyncio.sleep(1)
-    print('asynchronous programming')
+    await fn2()
+    print('four')
     await asyncio.sleep(1)
-    print('and not multi-threading')
+    print('five')
+    await asyncio.sleep(1)
+
+
+async def fn2():
+    await asyncio.sleep(1)
+    print("two")
+    await asyncio.sleep(1)
+    print("three")
 
 
 asyncio.run(fn())
