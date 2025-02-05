@@ -14,15 +14,29 @@ async def parse(html,loop):
     links = soup.find_all('a')
     return links
 
+async def fetch_and_parse(session, url):
+    html = await fetch(session, url)
+    loop = asyncio.get_event_loop()
+    links = await parse(html, loop)
+    # Do something with the results
+    print(links)
 
-async def main(url):
+
+async def main(urls):
     async with aiohttp.ClientSession() as session:
-        html = await fetch(session, url)
-        loop = asyncio.get_event_loop()
-        links = await parse(html,loop)
-        # Do something with the results
-        print(links)
+        await asyncio.gather(
+            *(
+                fetch_and_parse(session, url) for url in urls
+            )
+        )
 
 
-url = "https://www.fpds.gov/ezsearch/fpdsportal?q=SECURITIES+AND+EXCHANGE+COMMISSION&s=FPDS.GOV&templateName=1.5.3&indexName=awardfull&x=19&y=13"  # Replace with your target URL
-asyncio.run(main(url))
+mylist = list()
+for i in range(0,20):
+    mylist.append(i*30)
+
+urls = [
+    f"https://www.fpds.gov/ezsearch/fpdsportal?q=SECURITIES+AND+EXCHANGE+COMMISSION&s=FPDS.GOV&templateName=1.5.3&indexName=awardfull&x=19&y=13&start={number}"
+    for number in mylist]
+
+asyncio.run(main(urls))
